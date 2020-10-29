@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const api_key = process.env.REACT_APP_API_KEY
@@ -6,24 +6,36 @@ const api_key = process.env.REACT_APP_API_KEY
 const Country = ({ country }) => {
   const [weather, setWeather] = useState('')
 
-  async function getWeather() {
-    try {
-      const dataWeather = await axios.get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
-      setWeather(dataWeather)
-    } catch (e) {
-      console.log(e);
+  useEffect(() => {
+    async function getWeather() {
+      try {
+        const dataWeather = await axios.get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
+        setWeather(dataWeather.data.current)
+      } catch (e) {
+        console.log(e);
+      }
     }
-  }
-  getWeather()
+    getWeather()
+  }, [country.capital]);
 
-  console.log(666666, weather);
+  const weatherBlock = () => {
+    return (
+      <div>
+        <strong>temperature</strong>: { weather.temperature} Celcius < br />
+        <img src={weather.weather_icons} alt='weather' /><br />
+        <strong>wind:</strong> { `${weather.wind_speed} mph direction ${weather.wind_dir}`}
+      </div>
+    )
+  }
+
+  const countryPopulation = country.population.toLocaleString().replace(/,/g, " ")
 
   return (
     <div>
       <h1>{country.name}</h1>
       <p>
         capital: {country.capital}<br />
-        population: {country.population}
+        population: {countryPopulation}
       </p>
       <h3>languages</h3>
       <div>
@@ -33,9 +45,8 @@ const Country = ({ country }) => {
         <img src={country.flag} height="100" width="150" alt={`flag of ${country.name}`} />
       </p>
       <h3>weather in {country.capital} </h3>
-      {/* temperature: {weather.data.current.temperature} */}
+      {weather && weatherBlock()}
     </div>
-
   )
 }
 

@@ -18,7 +18,6 @@ function App() {
   const handleNameSearch = (event) => {
     setNewSearch(event.target.value);
     setShowSingleCountry(false)
-    console.log(event.target.value);
   };
 
   const filteredCountries = countries.filter((elem) => {
@@ -31,16 +30,13 @@ function App() {
   const handleShowCountry = (event) => {
     event.preventDefault();
     setShowSingleCountry(true);
-    console.log(event.target.value);
     const searchCountry = filteredCountries.filter(
       (el) => el.name === event.target.value
     );
-    console.log(55555, searchCountry);
     setSingleCountry(searchCountry[0])
   };
 
   const renderCountryToShow = () => {
-    console.log(22222, filteredCountries);
     if (filteredCountries.length === 1) {
       return <Country country={filteredCountries[0]} />;
     } else if (filteredCountries.length >= 10) {
